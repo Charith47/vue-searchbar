@@ -1,7 +1,7 @@
 <template>
-  <div class="widget">
+  <div>
     <label for="search-bar"></label>
-    <input type="text" name="search-bar" @input="debouncedInput" />
+    <input ref="input" type="text" name="search-bar" @input="debouncedInput" />
     <p>{{ query }}</p>
   </div>
 </template>
@@ -20,13 +20,22 @@ export default /*#__PURE__*/ {
   data() {
     return {
       query: "",
-      results: [],
     };
+  },
+  created() {
+    // add event listner for '/' shortcut
+    document.addEventListener("keydown", this.handleDocumentShortcuts);
   },
   methods: {
     enter(e) {
       this.query = e.target.value;
-      // call api
+    },
+    handleDocumentShortcuts(e) {
+      console.log("key pressed", e);
+      if (e.key === "/" && !this.hasFocus) {
+        e.preventDefault();
+        this.$refs.input.focus();
+      }
     },
   },
   computed: {
@@ -36,3 +45,11 @@ export default /*#__PURE__*/ {
   },
 };
 </script>
+
+<style scoped>
+#widget {
+  background: crimson;
+  width: fit-content;
+  height: fit-content;
+}
+</style>
