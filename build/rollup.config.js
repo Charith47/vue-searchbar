@@ -13,6 +13,7 @@ import minimist from 'minimist';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
 import tailwind from 'tailwindcss';
+import purgecss from '@fullhuman/postcss-purgecss';
 
 // Get browserslist config and remove ie from es build targets
 const esbrowserslist = fs.readFileSync('./.browserslistrc')
@@ -45,7 +46,7 @@ const baseConfig = {
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
     vue: {
-      css: true,
+      css: false,
       template: {
         isProduction: true,
       },
@@ -60,12 +61,6 @@ const baseConfig = {
       exclude: 'node_modules/**',
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
       babelHelpers: 'bundled',
-    },
-    postcss: {
-      plugins: [
-        autoprefixer(),
-        tailwind()
-      ]
     }
   },
 };
@@ -162,6 +157,13 @@ if (!argv.format || argv.format === 'iife') {
       globals,
     },
     plugins: [
+      postcss({
+        extract: true,
+        plugins: [
+          autoprefixer(),
+          tailwind()
+        ]
+      }),
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
