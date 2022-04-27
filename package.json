@@ -1,7 +1,7 @@
 {
   "name": "vue-searchbar",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "A searchbar component for Vue 2",
   "main": "dist/search-bar.ssr.js",
   "browser": "dist/search-bar.esm.js",
   "module": "dist/search-bar.esm.js",
