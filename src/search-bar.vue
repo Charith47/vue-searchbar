@@ -36,6 +36,7 @@
 import debounce from "lodash.debounce";
 import { mdiMagnify } from "@mdi/js";
 import icon from "@/icon.vue";
+import "@/search-bar.css";
 
 export default /*#__PURE__*/ {
   props: {
