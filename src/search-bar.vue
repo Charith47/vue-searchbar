@@ -28,15 +28,14 @@
       @focus="hasFocus = true"
       @blur="hasFocus = false"
     />
-    <p>{{ query }}</p>
+    <p class="text-gray-700 dark:text-gray-200">{{ query }}</p>
   </div>
 </template>
 
 <script>
 import debounce from "lodash.debounce";
 import { mdiMagnify } from "@mdi/js";
-import icon from "@/icon.vue";
-import "@/search-bar.css";
+import icon from "@/components/icon.vue";
 
 export default /*#__PURE__*/ {
   props: {
@@ -95,3 +94,9 @@ export default /*#__PURE__*/ {
   },
 };
 </script>
+
+<style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</style>
