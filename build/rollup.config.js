@@ -14,6 +14,7 @@ import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
 import tailwind from 'tailwindcss';
 import purgecss from '@fullhuman/postcss-purgecss';
+import cssnano from 'cssnano'
 
 // Get browserslist config and remove ie from es build targets
 const esbrowserslist = fs.readFileSync('./.browserslistrc')
@@ -65,19 +66,29 @@ const baseConfig = {
   },
 };
 
+const postcssPlugin = postcss({
+  extract: true,
+  plugins: [
+    autoprefixer(),
+    tailwind(),
+    cssnano({
+      preset: 'default'
+    }),
+    purgecss({
+      content: ['../src/**/*.vue'],
+    })
+  ]
+})
+
 // ESM/UMD/IIFE shared settings: externals
 // Refer to https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
 const external = [
-  // list external dependencies, exactly the way it is written in the import statement.
-  // eg. 'jquery'
   'vue',
 ];
 
 // UMD/IIFE shared settings: output.globals
 // Refer to https://rollupjs.org/guide/en#output-globals for details
 const globals = {
-  // Provide global variable names to replace your external imports
-  // eg. jquery: '$'
   vue: 'Vue',
 };
 
@@ -94,6 +105,7 @@ if (!argv.format || argv.format === 'es') {
       exports: 'named',
     },
     plugins: [
+      postcssPlugin,
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
@@ -128,6 +140,7 @@ if (!argv.format || argv.format === 'cjs') {
       globals,
     },
     plugins: [
+      postcssPlugin,
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue({
@@ -157,13 +170,7 @@ if (!argv.format || argv.format === 'iife') {
       globals,
     },
     plugins: [
-      postcss({
-        extract: true,
-        plugins: [
-          autoprefixer(),
-          tailwind()
-        ]
-      }),
+      postcssPlugin,
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.preVue,
       vue(baseConfig.plugins.vue),
@@ -179,5 +186,4 @@ if (!argv.format || argv.format === 'iife') {
   buildFormats.push(unpkgConfig);
 }
 
-// Export config
 export default buildFormats;
