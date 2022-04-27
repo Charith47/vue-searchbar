@@ -1,22 +1,29 @@
 <template>
-  <div>
+  <div class="px-4 py-4 dark:bg-gray-900">
+    <icon :path="icons.mdiMagnify"></icon>
     <label for="search-bar"></label>
     <input
       class="
-        bg-gray-200
         appearance-none
-        border-2 border-gray-200
         rounded
-        w-full
-        py-2
-        px-4
-        text-gray-700
         leading-tight
-        focus:outline-none focus:bg-white focus:border-blue-500
+        py-2
+        pr-4
+        pl-8
+        bg-gray-200
+        dark:bg-gray-700
+        text-gray-700
+        dark:text-gray-100
+        focus:outline-none focus:bg-white
+        border-2 border-gray-200
+        dark:border-gray-700
+        focus:border-indigo-400
+        dark:focus:border-indigo-500
       "
       ref="input"
       type="text"
       name="search-bar"
+      :placeholder="placeholder ? placeholder : 'Search..'"
       @input="debouncedInput"
       @focus="hasFocus = true"
       @blur="hasFocus = false"
@@ -27,6 +34,8 @@
 
 <script>
 import debounce from "lodash.debounce";
+import { mdiMagnify } from "@mdi/js";
+import icon from "@/icon.vue";
 
 export default /*#__PURE__*/ {
   props: {
@@ -34,12 +43,22 @@ export default /*#__PURE__*/ {
       type: Number,
       default: 350,
     },
+    placeholder: {
+      type: String,
+      default: "Search",
+    },
   },
   name: "SearchBar",
+  components: {
+    icon,
+  },
   data() {
     return {
       query: "",
       hasFocus: false,
+      icons: {
+        mdiMagnify,
+      },
     };
   },
   created() {
@@ -51,6 +70,8 @@ export default /*#__PURE__*/ {
   methods: {
     enter(e) {
       this.query = e.target.value;
+
+      // validate input
       this.$emit("search", this.query);
     },
     handleDocumentShortcuts(e) {
@@ -73,11 +94,3 @@ export default /*#__PURE__*/ {
   },
 };
 </script>
-
-<style scoped>
-#widget {
-  background: crimson;
-  width: fit-content;
-  height: fit-content;
-}
-</style>

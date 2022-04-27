@@ -1,17 +1,24 @@
 <script>
-import Vue from 'vue';
-import SearchBar from '@/search-bar.vue';
-import '@/search-bar.css'
+import Vue from "vue";
+import SearchBar from "@/search-bar.vue";
+import "@/search-bar.css";
+
 export default Vue.extend({
-  name: 'ServeDev',
+  name: "ServeDev",
   components: {
-    SearchBar
-  }
+    SearchBar,
+  },
+  data() {
+    return {
+      isDark: true,
+    };
+  },
 });
 </script>
 
 <template>
-  <div id="app">
+  <div :class="isDark ? 'dark' : ''" id="app">
+    <button @click="isDark = !isDark"> Toggle mode</button>
     <search-bar />
   </div>
 </template>
